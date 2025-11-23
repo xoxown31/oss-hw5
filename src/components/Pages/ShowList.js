@@ -1,29 +1,28 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import StudentFormModal from "../Modals/StudentFormModal";
+import ConfirmModal from "../Modals/ConfirmModal";
+import ToastContainer from "../Toast/ToastContainer";
 
 const ShowList = () => {
   const apiUrl = "https://6909a7b12d902d0651b49b1c.mockapi.io/students";
 
-  // State
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(false);
   
-  // Modal Visibility
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
+  // --- Modal States ---
+  const [showFormModal, setShowFormModal] = useState(false);
+  const [modalMode, setModalMode] = useState("add"); // "add" or "edit"
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   
-  // Form Data
   const [formData, setFormData] = useState({ name: "", age: "", email: "", city: "" });
   const [selectedId, setSelectedId] = useState(null);
-  
-  // Toast
   const [toasts, setToasts] = useState([]);
 
   // --- API Functions ---
   const getStudents = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${apiUrl}`);
+      const res = await fetch(apiUrl);
       if (res.ok) {
         const data = await res.json();
         setStudents(data);
@@ -37,9 +36,8 @@ const ShowList = () => {
 
   const postData = async () => {
     if (!validateForm()) return;
-
     try {
-      const res = await fetch(`${apiUrl}`, {
+      const res = await fetch(apiUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json; charset=UTF-8" },
         body: JSON.stringify({ ...formData, age: parseInt(formData.age) }),
@@ -58,7 +56,6 @@ const ShowList = () => {
 
   const updateData = async () => {
     if (!validateForm()) return;
-
     try {
       const res = await fetch(`${apiUrl}/${selectedId}`, {
         method: "PUT",
@@ -105,20 +102,15 @@ const ShowList = () => {
   };
 
   const handleInputChange = (e) => {
-    const { id, value } = e.target;
-    let field = "";
-    if (id.includes("Name")) field = "name";
-    else if (id.includes("Age")) field = "age";
-    else if (id.includes("Email")) field = "email";
-    else if (id.includes("City")) field = "city";
-    
-    setFormData({ ...formData, [field]: value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
   };
 
   // --- Modal Control ---
   const openAddModalFn = () => {
     setFormData({ name: "", age: "", email: "", city: "" });
-    setShowAddModal(true);
+    setModalMode("add"); 
+    setShowFormModal(true);
   };
 
   const openEditModalFn = (student) => {
@@ -129,7 +121,8 @@ const ShowList = () => {
       city: student.city 
     });
     setSelectedId(student.id);
-    setShowEditModal(true);
+    setModalMode("edit");
+    setShowFormModal(true);
   };
 
   const openConfirmModalFn = (id) => {
@@ -138,8 +131,7 @@ const ShowList = () => {
   };
 
   const closeModals = () => {
-    setShowAddModal(false);
-    setShowEditModal(false);
+    setShowFormModal(false);
   };
 
   const closeConfirmModalFn = () => {
@@ -160,17 +152,15 @@ const ShowList = () => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   };
 
-  // --- JSX Rendering ---
   return (
     <>
       <div className="container">
         <h1>Student Management System</h1>
-
         <div className="button-group">
           <button id="btnStu" onClick={getStudents}>Load Student Data</button>
           <button id="btnAdd" onClick={openAddModalFn}>Add New Student</button>
         </div>
-
+        
         <div id="contents">
             {loading ? (
                 <div className="loading"><div className="spinner"></div>Loading...</div>
@@ -187,18 +177,8 @@ const ShowList = () => {
                             </div>
                         </div>
                         <div className="button-container">
-                            <button 
-                                className="modify-btn" 
-                                onClick={() => openEditModalFn(student)}
-                            >
-                                Edit
-                            </button>
-                            <button 
-                                className="delete-btn" 
-                                onClick={() => openConfirmModalFn(student.id)}
-                            >
-                                Delete
-                            </button>
+                            <button className="modify-btn" onClick={() => openEditModalFn(student)}>Edit</button>
+                            <button className="delete-btn" onClick={() => openConfirmModalFn(student.id)}>Delete</button>
                         </div>
                     </li>
                     ))}
@@ -207,104 +187,22 @@ const ShowList = () => {
         </div>
       </div>
 
-      {/* Add Student Modal */}
-      {showAddModal && (
-        <div id="addModal" className="modal" style={{ display: "block" }}>
-          <div className="modal-content">
-            <div className="modal-header">
-              <h2 className="modal-title">Add New Student</h2>
-              <span className="close" onClick={closeModals}>&times;</span>
-            </div>
-            <div className="modal-body">
-              <div className="form-group">
-                <label className="form-label" htmlFor="modalName">Full Name</label>
-                <input type="text" id="modalName" className="form-input" placeholder="Enter full name" value={formData.name} onChange={handleInputChange} />
-              </div>
-              <div className="form-group">
-                <label className="form-label" htmlFor="modalAge">Age</label>
-                <input type="text" id="modalAge" className="form-input" placeholder="Enter age" value={formData.age} onChange={handleInputChange} />
-              </div>
-              <div className="form-group">
-                <label className="form-label" htmlFor="modalEmail">Email Address</label>
-                <input type="text" id="modalEmail" className="form-input" placeholder="Enter email" value={formData.email} onChange={handleInputChange} />
-              </div>
-              <div className="form-group">
-                <label className="form-label" htmlFor="modalCity">City</label>
-                <input type="text" id="modalCity" className="form-input" placeholder="Enter city" value={formData.city} onChange={handleInputChange} />
-              </div>
-            </div>
-            <div className="modal-footer">
-              <button className="modal-btn modal-btn-cancel" onClick={closeModals}>Cancel</button>
-              <button className="modal-btn" onClick={postData}>Add Student</button>
-            </div>
-          </div>
-        </div>
-      )}
+      <StudentFormModal 
+        isOpen={showFormModal} 
+        close={closeModals} 
+        mode={modalMode} 
+        data={formData} 
+        onChange={handleInputChange} 
+        onSubmit={modalMode === "add" ? postData : updateData} 
+      />
 
-      {/* Edit Student Modal */}
-      {showEditModal && (
-        <div id="editModal" className="modal" style={{ display: "block" }}>
-          <div className="modal-content">
-            <div className="modal-header">
-              <h2 className="modal-title">Edit Student Information</h2>
-              <span className="close" onClick={closeModals}>&times;</span>
-            </div>
-            <div className="modal-body">
-              <div className="form-group">
-                <label className="form-label" htmlFor="editName">Full Name</label>
-                <input type="text" id="editName" className="form-input" placeholder="Enter full name" value={formData.name} onChange={handleInputChange} />
-              </div>
-              <div className="form-group">
-                <label className="form-label" htmlFor="editAge">Age</label>
-                <input type="text" id="editAge" className="form-input" placeholder="Enter age" value={formData.age} onChange={handleInputChange} />
-              </div>
-              <div className="form-group">
-                <label className="form-label" htmlFor="editEmail">Email Address</label>
-                <input type="text" id="editEmail" className="form-input" placeholder="Enter email" value={formData.email} onChange={handleInputChange} />
-              </div>
-              <div className="form-group">
-                <label className="form-label" htmlFor="editCity">City</label>
-                <input type="text" id="editCity" className="form-input" placeholder="Enter city" value={formData.city} onChange={handleInputChange} />
-              </div>
-            </div>
-            <div className="modal-footer">
-              <button className="modal-btn modal-btn-cancel" onClick={closeModals}>Cancel</button>
-              <button className="modal-btn" onClick={updateData}>Update Student</button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmModal 
+        isOpen={showConfirmModal} 
+        close={closeConfirmModalFn} 
+        onConfirm={deleteData} 
+      />
 
-      {/* Confirmation Modal */}
-      {showConfirmModal && (
-        <div id="confirmModal" className="confirm-modal" style={{ display: "block" }}>
-          <div className="confirm-modal-content">
-            <div className="confirm-icon">⚠️</div>
-            <p id="confirmMessage" className="confirm-message">
-              Are you sure you want to delete this student? This action cannot be undone.
-            </p>
-            <div className="confirm-buttons">
-              <button className="modal-btn modal-btn-cancel" onClick={closeConfirmModalFn}>Cancel</button>
-              <button className="modal-btn" onClick={deleteData}>Confirm</button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Toast Container */}
-      <div id="toastContainer" className="toast-container">
-        {toasts.map((toast) => (
-          <div key={toast.id} className={`toast ${toast.type} show`}>
-            <div className="toast-content">
-              <span className="toast-icon">
-                {toast.type === "success" ? "✓" : toast.type === "error" ? "✕" : "⚠"}
-              </span>
-              <span className="toast-message">{toast.message}</span>
-            </div>
-            <button className="toast-close" onClick={() => removeToast(toast.id)}>&times;</button>
-          </div>
-        ))}
-      </div>
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
     </>
   );
 };

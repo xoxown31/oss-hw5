@@ -1,0 +1,95 @@
+{
+  "students":[
+    {
+      "name": "Louis Ebert",
+      "age": 50,
+      "email": "Garth_Schinner35@gmail.com",
+      "city": "Tonawanda",
+      "id": "6"
+    },
+    {
+      "name": "Derek Farrell",
+      "age": 78,
+      "email": "Rolando.Yost49@hotmail.com",
+      "city": "New Candace",
+      "id": "8"
+    },
+    {
+      "name": "Maxine Morar",
+      "age": 63,
+      "email": "Kane9@hotmail.com",
+      "city": "Erdmanview",
+      "id": "9"
+    },
+    {
+      "name": "Della Franecki",
+      "age": 42,
+      "email": "Shea_Mosciski62@gmail.com",
+      "city": "Port Cecilfield",
+      "id": "10"
+    },
+    {
+      "name": "Beulah Lynch",
+      "age": 1,
+      "email": "Emmet86@hotmail.com",
+      "city": "Lake Verdiestad",
+      "id": "11"
+    },
+    {
+      "name": "Dr. Eduardo Jaskolski",
+      "age": 18,
+      "email": "Trinity_Stoltenberg11@yahoo.com",
+      "city": "Delray Beach",
+      "id": "12"
+    },
+    {
+      "name": "Vanessa Leannon",
+      "age": 80,
+      "email": "Krystina81@yahoo.com",
+      "city": "Elijahbury",
+      "id": "13"
+    },
+    {
+      "name": "Ken McDermott",
+      "age": 27,
+      "email": "Clint.Hudson52@hotmail.com",
+      "city": "Reynoldscester",
+      "id": "14"
+    },
+    {
+      "name": "Wallace Altenwerth",
+      "age": 65,
+      "email": "Jacinthe.MacGyver90@hotmail.com",
+      "city": "Ludieville",
+      "id": "15"
+    },
+    {
+      "name": "Emanuel Cassin",
+      "age": 79,
+      "email": "Matteo74@hotmail.com",
+      "city": "North Marcelleport",
+      "id": "16"
+    },
+    {
+      "name": "Doreen Gleason I",
+      "age": 49,
+      "email": "Alaina_Ryan@gmail.com",
+      "city": "South Ardith",
+      "id": "17"
+    },
+    {
+      "name": "Edmond Tremblay",
+      "age": 3,
+      "email": "Margie11@yahoo.com",
+      "city": "Kihnmouth",
+      "id": "18"
+    },
+    {
+      "name": "Susie Koepp",
+      "age": 75,
+      "email": "Eliza97@yahoo.com",
+      "city": "North Coraliestad",
+      "id": "19"
+    }
+  ]
+}
